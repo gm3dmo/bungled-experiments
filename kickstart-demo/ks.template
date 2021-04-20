@@ -1,0 +1,158 @@
+###################################################
+# ks.template A basic eal4 kickstart file nothing
+# This file is processed by python's string template
+# library.
+###################################################
+### Hostname: ${hostname}
+## See this from RedHat which explains kickstart stuff:
+## https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Installation_Guide/s1-kickstart2-options.html
+
+# To boot from this you could do:
+# On 192.168.0.1 share this file out using python -m SimpleHTTPServer 8000
+# ksdevice=eth0 ip=192.168.0.2 netmask=255.255.255.0 hostname=demo ks=http://192.168.0.1:8000/ks.cfg
+
+
+
+key  --skip
+lang en_GB.UTF-8
+keyboard uk
+timezone Europe/London
+text
+install
+cdrom
+
+
+## You should set this to something appropriate for your environment
+# The password below is 'fordtransit12'
+rootpw --iscrypted '$6$3JGR54it$bh4T9LynVa4.8fBmIoVe69xYHClFJNzR.4sKtYjR/QG3KOWC53C7zhvYuD8BzY7FkUrYR1v6rkEN0CDjNohh30'
+
+# To add a normal user:
+#user --name=<username> [--gecos=<string>] [--groups=<list>] [--homedir=<homedir>] [--password=<password>] [--iscrypted|--plaintext] [--lock] [--shell=<shell>] [--uid=<uid>] [--gid=<gid>
+user --name=xyz --gecos='A user called XYZ' --groups=wheel --homedir=/home/xyz --password='bahbah' --plaintext --lock
+
+
+# Turn the firewall on and permit port 22 as long as eth0 is your management LAN:
+firewall --enabled --trust=eth0 --port=22:tcp 
+
+# Enable selinux:
+selinux --enforcing
+
+# Set password hashing algorithm:
+authconfig --enableshadow --passalgo=sha512
+
+reboot
+
+network --noipv6 --device=eth0 ip=${eth0_ip_address} --netmask=${eth0_netmask} --hostname=${hostname} --nameserver=8.8.8.8
+
+# To generate the password use grub-md5crypt 
+#  $1$Coch$PPyjvZM9qsvS0DO95b1gs0 = turtlewax34
+# Again change these for your build.
+bootloader --location=mbr --driveorder=sda --append="rhgb quiet audit=1" --md5pass='$1$Coch$PPyjvZM9qsvS0DO95b1gs0' --iscrypted
+
+firstboot --disable
+
+# Services you want disabled on start:
+services --disable atd
+
+# Disk partitioning
+zerombr yes
+
+# Be very careful about where you use 'clearpart --all' without limiting
+# it you could clear all the partitions on all the disks the install can
+# see. On a SAN without zoning/security that could be very bad!
+clearpart --all --drives=sda --initlabel
+
+
+## part pv.6 --grow --size=1 --encrypt --passphrase=an appropriate passphrase
+
+part /boot --fstype=ext4 --size=250
+part pv.6 --grow --size=1 --label=vg00
+volgroup vg00 --pesize=65536 pv.6
+
+part swap --size 4096 --asprimary --ondisk sda  --label=swap
+
+# Layout the logical volumes as per the EAL 4 configs. This one fits in 20Gb
+logvol /home           --fstype=ext4 --fsoptions="defaults,relatime,nodev,discard"               --name=home     --vgname=vg00  --size=512
+logvol /tmp            --fstype=ext4 --fsoptions="defaults,relatime,nodev,nosuid,noexec,discard" --name=temp     --vgname=vg00  --size=1024
+logvol /var            --fstype=ext4 --fsoptions="defaults,relatime,discard"                     --name=var      --vgname=vg00  --size=4096
+logvol /var/log        --fstype=ext4 --fsoptions="defaults,relatime,nodev,nosuid,noexec,discard" --name=varlog   --vgname=vg00  --size=1024
+logvol /var/log/audit  --fstype=ext4 --fsoptions="defaults,relatime,discard"                     --name=audit    --vgname=vg00  --size=1024
+logvol /               --fstype=ext4 --fsoptions="defaults,relatime,discard"                     --name=root     --vgname=vg00  --size=4096
+
+
+# Packages section
+%packages --excludedocs
+@Base
+@Core
+# Excluded packages
+-abrt-libs
+-abrt-tui
+-abrt-cli
+-abrt
+-abrt-addon-python
+-abrt-addon-ccpp
+-abrt-addon-kerneloops
+-Red_Hat_Enterprise_Linux-Release_Notes-6-en-US
+-acipd
+-b43-fwcutter
+-blktrace
+-bridge-utils
+-cpuspeed
+-fprintd-pam
+-irqbalance
+-kexec-tools
+-ledmon
+-microcode_ctl
+-mlocate
+-pcmciautils
+-pinfo
+-psacct
+-quota
+-pm-utils
+-rfkill
+-scl-utils
+-smartmontools
+-sos
+-strace
+-sysstat
+-systemtap-runtime
+-usbutils
+-vconfig
+-wireless-tools
+-dovecot
+-spamassassin
+# Remove nano for to punish those too weak in the mind to use vi:
+-nano
+# Included Packages
+vlock
+aide
+vim-enhanced
+postfix
+# SNMP enabled
+net-snmp
+net-snmp-utils
+net-snmp-devel
+
+%post
+# Install redhat-release key for later use validating rpms
+# CCE-14440-2 (row 7)
+rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-auxiliary
+rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-former
+rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-rhx
+
+# Cloudera yum repo:
+
+rpm -ivh http://192.168.55.1:8000/cloudera-cdh-4-0.x86_64.rpm
+rpm --import http://192.168.55.1:8000/RPM-GPG-KEY-cloudera
+
+%end
+
+## Probably a good place to put something in about
+## VMWare Tools getting installed. Just ignore
+## all the security guff and do that in SaltStack
+## or Puppet or whatever else the configuration
+## management tool du jour is.
+
+
+

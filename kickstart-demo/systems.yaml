@@ -1,0 +1,18 @@
+defaults:
+  netmask: 255.255.255.0
+  dns: 192.168.1.1
+  gateway: 192.168.1.254
+  root_pw: 'root_password'
+hosts:
+    abc-001:
+        eth0:
+          - ip_address: 192.168.1.101
+          - netmask: 255.255.0.0
+          - dns: 192.168.1.2
+    abc-002:
+        eth0:
+          - ip_address: 192.168.1.102
+    abc-003:
+        eth0:
+          - ip_address: 192.168.1.103
+          - role: graylog

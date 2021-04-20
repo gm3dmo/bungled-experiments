@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns:fo="http://www.w3.org/1999/XSL/Format">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+
+    <title>CADS-{{ isodate }}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="theme.css" rel="stylesheet">
+<title>Nmap Scan Report - Scanned at Fri Apr  3 20:21:08 2015</title>
+<script type="text/javascript">
+     
+      
+                
+      function toggle(divID) {
+        var item = document.getElementById(divID);
+        if (item) {
+          item.className=(item.className=='hidden')?'unhidden':'hidden';
+        }
+      }
+           
+      function togglePorts(tableID,portState) {
+        var table = document.getElementById(tableID);    
+        var tbody = table.getElementsByTagName("tbody")[0];
+        var rows = tbody.getElementsByTagName("tr");
+        for (var i=0; i < rows.length; i++) {
+          var value = rows[i].getElementsByTagName("td")[2].firstChild.nodeValue;
+          if (value == portState) {
+            rows[i].style.display = (rows[i].style.display == 'none')?'':'none';
+          }
+        }
+      }
+      
+      function toggleAll(portState) {
+        var allTables = document.getElementsByTagName("table");
+        for (var c=0; c < allTables.length; c++) {
+          if (allTables[c].id != "") {
+            togglePorts(allTables[c].id, portState)
+          }
+        }
+      }
+      
+      function init (){
+        toggleAll('closed');
+        toggleAll('filtered');     
+      }     
+            
+      window.onload = init; 
+      
+      
+    
+    </script>
+</head>
+<body>
+<a name="top"></a><div id="container">
+<h1>Nmap Scan Report - Scanned at Fri Apr  3 20:21:08 2015</h1>
+<ul id="menu">
+<li><a href="#scansummary">Scan Summary</a></li>
+<li> | <a href="#host_80_68_94_228" class="up">www.corpsofmilitarypolice.org
+                    (80.68.94.228)
+                  </a>
+</li>
+</ul>
+<a name="scansummary"></a><hr class="print_only">
+<h2>Scan Summary</h2>
+<p>
+      Nmap 6.25 was initiated at Fri Apr  3 20:21:08 2015 with these arguments:<br><i>nmap -oX xml/nmap.www.corpsofmilitarypolice.org.1428088867.xml --stylesheet ../nmap.xsl www.corpsofmilitarypolice.org</i><br></p>
+<p>
+    Verbosity: 0; Debug level 0</p>
+<p>Nmap done at Fri Apr  3 20:21:12 2015; 1 IP address (1 host up) scanned in 4.26 seconds</p>
+<hr class="print_only">
+<a name="host_80_68_94_228"></a><h2 class="up">80.68.94.228 / www.corpsofmilitarypolice.org / www.corpsofmilitarypolice.org<span class="print_only">(online)</span>
+</h2>
+<div id="hostblock_80.68.94.228" class="unhidden">
+<h3>Address</h3>
+<ul><li>80.68.94.228
+            (ipv4)
+          </li></ul>
+
+<h3>Hostnames</h3>
+<ul>
+<li>www.corpsofmilitarypolice.org (user)</li>
+<li>www.corpsofmilitarypolice.org (PTR)</li>
+</ul>
+<h3>Ports</h3>
+<p>The 995 ports scanned but not shown below are in state: <b>filtered</b></p>
+<ul><li><p>995 ports replied with: <b>no-responses</b></p></li></ul>
+<table id="porttable_80.68.94.228" cellspacing="1">
+<tr class="head">
+<td colspan="2">Port</td>
+<td>State 
+          <a href="javascript:togglePorts('porttable_80.68.94.228','closed');"><span class="noprint"><small> (toggle closed [3] </small></span></a><a href="javascript:togglePorts('porttable_80.68.94.228','filtered');"><span class="noprint"><small> | filtered [0])</small></span></a>
+</td>
+<td>Service</td>
+<td>Reason</td>
+<td>Product</td>
+<td>Version</td>
+<td>Extra info</td>
+</tr>
+
+
+<tr class="open">
+<td>22</td>
+<td>tcp</td>
+<td>open</td>
+<td>ssh </td>
+<td>syn-ack</td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr class="open">
+<td>80</td>
+<td>tcp</td>
+<td>open</td>
+<td>http </td>
+<td>syn-ack</td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr class="closed">
+<td>81</td>
+<td>tcp</td>
+<td>closed</td>
+<td>hosts2-ns </td>
+<td>conn-refused</td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr class="closed">
+<td>82</td>
+<td>tcp</td>
+<td>closed</td>
+<td>xfer </td>
+<td>conn-refused</td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr class="closed">
+<td>443</td>
+<td>tcp</td>
+<td>closed</td>
+<td>https </td>
+<td>conn-refused</td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+</table>
+
+<br><a href="javascript:toggle('metrics_80.68.94.228');">
+    Misc Metrics <span class="noprint"><small> (click to expand)</small></span></a><div id="metrics_80.68.94.228" class="hidden"><table cellspacing="1">
+<tr class="head">
+<td>Metric</td>
+<td>Value</td>
+</tr>
+<tr>
+<td>Ping Results</td>
+<td>conn-refused</td>
+</tr>
+</table></div>
+</div>
+</div>
+<div id="menubox" class="noprint">
+<a href="#top"><small>Go to top</small></a><br><a href="javascript:toggleAll('closed');"><small>Toggle Closed Ports</small></a><br><a href="javascript:toggleAll('filtered');"><small>Toggle Filtered Ports</small></a>
+</div>
+</body>
+</html>

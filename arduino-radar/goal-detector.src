@@ -1,0 +1,85 @@
+// ---------------------------------------------------------------------------
+// Example NewPing library sketch that does a ping about 20 times per second.
+// ---------------------------------------------------------------------------
+
+#include <NewPing.h>
+
+#define TRIGGER_PIN  12  // Arduino pin tied to trigger pin on the ultrasonic sensor.
+#define ECHO_PIN     11  // Arduino pin tied to echo pin on the ultrasonic sensor.
+#define MAX_DISTANCE 60 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
+
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
+
+
+// Sound
+int speakerPin = 6;  
+int length = 2; // the number of notes
+char notes[] = "ec"; // match of the day
+//  char notes[] = "e a C eCCCCCCdeCbCd "; // a space represents a rest 
+
+int beats[] = { 1, 1 }; 
+
+int tempo = 150; 
+
+void playTone(int tone, int duration) 
+{   
+  for (long i = 0; i < duration * 1000L; i += tone * 2) 
+  {     
+      digitalWrite(speakerPin, HIGH);     
+      delayMicroseconds(tone);     
+      digitalWrite(speakerPin, LOW);     
+      delayMicroseconds(tone);   
+  } 
+}   
+////////////////////////////////////////////////////
+void playNote(char note, int duration) 
+{   
+  char names[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };   
+  int tones[] = { 1915, 1700, 1519, 1432, 1275, 1136, 1014, 956 };     // play the tone corresponding to the note name   
+  for (int i = 0; i < 8; i++) 
+  {     
+    if (names[i] == note) 
+    {       
+        playTone(tones[i], duration);     
+    }   
+  } 
+}   
+
+
+
+
+void setup() {
+  Serial.begin(115200); // Open serial monitor at 115200 baud to see ping results.
+  // Sound
+  pinMode(speakerPin, OUTPUT); 
+  pinMode(7, OUTPUT);
+  digitalWrite(6, LOW); 
+}
+
+void loop() {
+  delay(50);                      // Wait 50ms between pings (about 20 pings/sec). 29ms should be the shortest delay between pings.
+  unsigned int uS = sonar.ping(); // Send ping, get ping time in microseconds (uS).
+  Serial.print("Ping: ");
+  /* int distance =uS / US_ROUNDTRIP_CM */
+  Serial.print(uS / US_ROUNDTRIP_CM); // Convert ping time to distance and print result (0 = outside set distance range, no ping echo)
+  Serial.println(" cm");
+  if ((uS / US_ROUNDTRIP_CM) > 0 ) {
+     Serial.print("on target");
+     for (int i = 0; i < length; i++) 
+     {     
+     if (notes[i] == ' ') 
+     {       
+         delay(beats[i] * tempo); // rest     
+     }
+     else 
+     {       
+        playNote(notes[i], beats[i] * tempo);     
+     }       // pause between notes     
+     delay(tempo / 4);    
+  } 
+     
+     
+  }
+
+
+}
